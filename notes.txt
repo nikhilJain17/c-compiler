@@ -1,0 +1,4 @@
+Compilers have 3 phases:
+    Lexing: string --> tokens
+    Parsing: tokens --> abstract syntax tree
+    Code Generation: abstract syntax tree --> assembly
