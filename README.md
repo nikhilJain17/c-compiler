@@ -1,1 +1,3 @@
-# c-compiler
+# seapiler
+
+A C compiler written in C++
