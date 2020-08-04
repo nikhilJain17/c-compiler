@@ -1,5 +1,5 @@
-#include "../seapiler.h"
-#include "../lexer.h"
+#include "../src/seapiler.h"
+#include "../src/lexer.h"
 
 void test_lex_singletons() {
     std::optional<Token> a1 = lex_token("123");
