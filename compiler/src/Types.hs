@@ -14,18 +14,20 @@ data Token =
     | ReturnKeyword
     | IntegerLiteral Int
     | Identifier String
-    | Error
+    | ErrorToken
 
 data ASTNode =
     ProgramNode Program 
     | FuncNode FunctionDeclaration 
     | StatementNode Statement 
     | ExpressionNode Expr
+    | ReturnNode
+    | ErrorNode
+    | Nil
 
 data AST = AST {
     root :: ASTNode,
-    left :: Maybe ASTNode, -- a child could be nil
-    right :: Maybe ASTNode
+    children :: [AST] -- a child could be nil
 }
 
 data Program = FunctionDeclaration
