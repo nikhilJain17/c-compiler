@@ -15,31 +15,31 @@ Token::Token(std::string data)
     this->data = data;
 
     // tediously match on type...this is one thing that would unironically be easier in Haskell
-    if (is_open_brace(data)) {
+    if (is_open_brace_from_rawdata(data)) {
         this->type = open_brace;
     }
-    else if (is_close_brace(data)) {
+    else if (is_close_brace_from_rawdata(data)) {
         this->type = close_brace;
     } 
-    else if (is_open_paren(data)) {
+    else if (is_open_paren_from_rawdata(data)) {
         this->type = open_paren;
     } 
-    else if (is_close_paren(data)) {
+    else if (is_close_paren_from_rawdata(data)) {
         this->type = close_paren;
     } 
-    else if (is_semicolon(data)) {
+    else if (is_semicolon_from_rawdata(data)) {
         this->type = semicolon;
     }
-    else if (is_type_keyword(data)) {
+    else if (is_type_keyword_from_rawdata(data)) {
         this->type = type_keyword;
     }
-    else if (is_return_keyword(data)) {
+    else if (is_return_keyword_from_rawdata(data)) {
         this->type = return_keyword;
     }
-    else if (is_integer_literal(data)) {
+    else if (is_integer_literal_from_rawdata(data)) {
         this->type = integer_literal;
     }
-    else if (is_identifier(data)) {
+    else if (is_identifier_from_rawdata(data)) {
         this->type = identifier;
     } 
     else {
@@ -61,7 +61,7 @@ Token::Token(std::string data)
 std::string Token::token_to_string()
 { 
     std::string s = "< ";
-    s.append(this->get_type());
+    s.append(this->get_type_str());
     s.append(" , ");
     s.append(this->get_data());
     s.append(" >");
@@ -72,28 +72,29 @@ Token::~Token()
 {
 }
 
-bool is_open_brace(std::string data) {
+// @TODO refactor the "get type stuff"
+bool is_open_brace_from_rawdata(std::string data) {
     return data.compare("{") == 0;
 }
-bool is_close_brace(std::string data) {
+bool is_close_brace_from_rawdata(std::string data) {
     return data.compare("}") == 0;
 }
-bool is_open_paren(std::string data) {
+bool is_open_paren_from_rawdata(std::string data) {
     return data.compare("(") == 0;
 }
-bool is_close_paren(std::string data) {
+bool is_close_paren_from_rawdata(std::string data) {
     return data.compare(")") == 0;
 }
-bool is_semicolon(std::string data) {
+bool is_semicolon_from_rawdata(std::string data) {
     return data.compare(";") == 0;
 }
-bool is_type_keyword(std::string data) {
-    return ((data.compare("int") == 0) || (data.compare("bool") == 0));
+bool is_type_keyword_from_rawdata(std::string data) {
+    return data.compare("int") == 0;// || (data.compare("bool") == 0));
 }
-bool is_return_keyword(std::string data) {
+bool is_return_keyword_from_rawdata(std::string data) {
     return (data.compare("return") == 0);
 }
-bool is_integer_literal(std::string data) {
+bool is_integer_literal_from_rawdata(std::string data) {
     // only positive literals are allowed
     if (data[0] == '-') {
         return false;
@@ -105,7 +106,7 @@ bool is_integer_literal(std::string data) {
     }
     return true;
 }
-bool is_identifier(std::string data) {
+bool is_identifier_from_rawdata(std::string data) {
     // first letter has to be alpha
     if (!isalpha(data[0])) {
         return false;
@@ -119,13 +120,13 @@ bool is_identifier(std::string data) {
     return true;
 }
 
-bool is_token(std::string tok) {
+bool is_token_from_rawdata(std::string tok) {
     
     if (tok.length() == 0) {
         return false;
     }
 
-    return is_open_brace(tok) || is_close_brace(tok) || is_open_paren(tok)
-        || is_close_paren(tok) || is_semicolon(tok) || is_type_keyword(tok)
-        || is_return_keyword(tok) || is_integer_literal(tok) || is_identifier(tok);
+    return is_open_brace_from_rawdata(tok) || is_close_brace_from_rawdata(tok) || is_open_paren_from_rawdata(tok)
+        || is_close_paren_from_rawdata(tok) || is_semicolon_from_rawdata(tok) || is_type_keyword_from_rawdata(tok)
+        || is_return_keyword_from_rawdata(tok) || is_integer_literal_from_rawdata(tok) || is_identifier_from_rawdata(tok);
 }

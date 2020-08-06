@@ -28,7 +28,7 @@ std::vector<Token> lex_file(std::string filename) {
     Lex a single word into a token
 */
 std::optional<Token> lex_token(std::string tok) {
-    if (is_token(tok)) {
+    if (is_token_from_rawdata(tok)) {
         return std::optional<Token>(Token(tok));
     }
     else {
