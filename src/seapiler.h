@@ -54,9 +54,12 @@ bool is_token_from_rawdata(std::string);
 
 class ASTNode
 {
-private:
+protected:
     std::vector<ASTNode> children;
 public:
+    std::vector<ASTNode> get_children() {
+        return this->children;
+    }
 };
 
 class ExprNode : public ASTNode
@@ -68,25 +71,41 @@ public:
     ExprNode(std::string s) {
         this->value = s;
     }
+    std::string get_value() {
+        return this->value;
+    }
 };
 
 class StatementNode : public ASTNode
 {
 private:
-    enum Type {
+    enum StatementType {
         return_stmt,
         nil
     };
-    Type type;
+    StatementType type;
     ExprNode expr;
 public:
     StatementNode() = default;
-    // return statement constructor
     StatementNode(ExprNode e, bool is_return_statement=false) {
         if (is_return_statement) {
             this->type = return_stmt;
             this->expr = e;
+            children.push_back(e);
         }
+    }
+    std::string get_statement_type() {
+        switch (this->type)
+        {
+        case StatementType::return_stmt:
+            return "return_stmt";
+        
+        default:
+            return "nil";
+        }
+    }
+    ExprNode get_expr() {
+        return this->expr;
     }
 };
 
@@ -100,6 +119,13 @@ public:
     FunctionNode(std::string id, StatementNode b) {
         this->identifier = id;
         this->body = b;
+        children.push_back(b);
+    }
+    std::string get_identifier() {
+        return this->identifier;
+    }
+    StatementNode get_function_body() {
+        return this->body;
     }
 };
 
@@ -111,5 +137,9 @@ public:
     ProgramNode() = default;
     ProgramNode(FunctionNode f) {
         this->function_child = f;
+        children.push_back(f);
+    }
+    FunctionNode get_function_node() {
+        return this->function_child;
     }
 };
