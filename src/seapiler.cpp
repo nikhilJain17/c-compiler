@@ -3,14 +3,15 @@
 #include "parser.h"
 #include "codegenerator.h"
 
-int main() {
-    compile();
-    return 0;
-}
+// int main() {
+//     compile();
+//     return 0;
+// }
 
 void compile()
 {
-    // clang++ -std=c++17 -stdlib=libc++ seapiler.cpp lexer.cpp
+    // λ> clang++ -std=c++17 -stdlib=libc++ src/*.cpp  tests/lexer_unit_tests.cpp -o lextest    
+    // λ> clang++ -std=c++17 -stdlib=libc++ src/*.cpp  -o seapiler
     std::string source_file;
     std::cout << "Enter c filename: ";
     std::cin >> source_file;
@@ -29,9 +30,21 @@ void compile()
     
 }
 
-const std::string Token::type_map[] = {"open_brace","close_brace","open_paren",
-    "close_paren","semicolon","type_keyword","return_keyword",
-    "integer_literal","identifier"};
+const std::string Token::type_map[] 
+    = {
+        "open_brace",
+        "close_brace",
+        "open_paren",
+        "close_paren",
+        "semicolon",
+        "type_keyword",
+        "return_keyword",
+        "integer_literal",
+        "identifier", 
+        "negation_op", 
+        "bitwise_complement_op", 
+        "logical_negation_op"
+    };
 
 
 Token::Token(std::string data)
@@ -66,6 +79,15 @@ Token::Token(std::string data)
     else if (is_identifier_from_rawdata(data)) {
         this->type = identifier;
     } 
+    else if (is_negation_op_from_rawdata(data)) {
+        this->type = negation_op;
+    }
+    else if (is_bitwise_complement_op_from_rawdata(data)) {
+        this->type = bitwise_complement_op;
+    }
+    else if (is_logical_negation_op_from_rawdata(data)) {
+        this->type = logical_negation_op;
+    }
     else {
         // should technically never reach here...
         throw std::invalid_argument("cannot tokenize -- something is very broken");
@@ -100,24 +122,31 @@ Token::~Token()
 bool is_open_brace_from_rawdata(std::string data) {
     return data.compare("{") == 0;
 }
+
 bool is_close_brace_from_rawdata(std::string data) {
     return data.compare("}") == 0;
 }
+
 bool is_open_paren_from_rawdata(std::string data) {
     return data.compare("(") == 0;
 }
+
 bool is_close_paren_from_rawdata(std::string data) {
     return data.compare(")") == 0;
 }
+
 bool is_semicolon_from_rawdata(std::string data) {
     return data.compare(";") == 0;
 }
+
 bool is_type_keyword_from_rawdata(std::string data) {
     return data.compare("int") == 0;// || (data.compare("bool") == 0));
 }
+
 bool is_return_keyword_from_rawdata(std::string data) {
     return (data.compare("return") == 0);
 }
+
 bool is_integer_literal_from_rawdata(std::string data) {
     // only positive literals are allowed
     if (data[0] == '-') {
@@ -130,6 +159,7 @@ bool is_integer_literal_from_rawdata(std::string data) {
     }
     return true;
 }
+
 bool is_identifier_from_rawdata(std::string data) {
     // first letter has to be alpha
     if (!isalpha(data[0])) {
@@ -144,6 +174,18 @@ bool is_identifier_from_rawdata(std::string data) {
     return true;
 }
 
+bool is_negation_op_from_rawdata(std::string data) {
+    return data.compare("-") == 0;
+}
+
+bool is_bitwise_complement_op_from_rawdata(std::string data) {
+    return data.compare("~") == 0;
+}
+
+bool is_logical_negation_op_from_rawdata(std::string data) {
+    return data.compare("!") == 0;
+}
+
 bool is_token_from_rawdata(std::string tok) {
     
     if (tok.length() == 0) {
@@ -152,5 +194,7 @@ bool is_token_from_rawdata(std::string tok) {
 
     return is_open_brace_from_rawdata(tok) || is_close_brace_from_rawdata(tok) || is_open_paren_from_rawdata(tok)
         || is_close_paren_from_rawdata(tok) || is_semicolon_from_rawdata(tok) || is_type_keyword_from_rawdata(tok)
-        || is_return_keyword_from_rawdata(tok) || is_integer_literal_from_rawdata(tok) || is_identifier_from_rawdata(tok);
+        || is_return_keyword_from_rawdata(tok) || is_integer_literal_from_rawdata(tok) || is_identifier_from_rawdata(tok)
+        || is_logical_negation_op_from_rawdata(tok) || is_negation_op_from_rawdata(tok) || is_bitwise_complement_op_from_rawdata(tok);
 }
+
