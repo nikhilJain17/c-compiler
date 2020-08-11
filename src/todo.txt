@@ -1,0 +1,19 @@
+---------------
+>   stage 1
+---------------
+[x] lex basic tokens 
+[x] parse basic tokens
+[x] generate basic program
+[x] end to end compiler flow
+
+---------------
+>   stage 2
+---------------
+[x] lex unary operators
+[ ] parse unary operators (parse_expr)
+[ ] generate unary operators
+
+---------------
+>   misc
+---------------
+[ ] add lexing support so that tokens dont have to be separated by spaces in the src file
