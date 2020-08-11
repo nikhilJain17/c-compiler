@@ -30,7 +30,7 @@ std::string generate_statement(StatementNode s) {
     if (s.get_statement_type().compare("return_stmt") == 0) {
         generated_code += "\tmovl\t$";
         generated_code += s.get_expr().get_value();
-        generated_code += " %EAX\n";
+        generated_code += ", %EAX\n";
         generated_code += "\tret\n";
     }
     return generated_code;

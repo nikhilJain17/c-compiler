@@ -103,8 +103,10 @@ void test_lex_singletons() {
     assert(a2.value().get_type_str().compare("integer_literal") == 0);
     std::cout << a2.value().token_to_string() << std::endl;
 
+}
 
-
+void test_lex_file() {
+    // @TODO
 }
 
 void test_parser_simple() {

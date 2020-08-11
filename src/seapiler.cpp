@@ -1,8 +1,32 @@
 #include "seapiler.h"
+#include "lexer.h"
+#include "parser.h"
+#include "codegenerator.h"
+
+int main() {
+    compile();
+    return 0;
+}
 
 void compile()
 {
     // clang++ -std=c++17 -stdlib=libc++ seapiler.cpp lexer.cpp
+    std::string source_file;
+    std::cout << "Enter c filename: ";
+    std::cin >> source_file;
+
+    std::vector<Token> tokens = lex_file(source_file);
+    ProgramNode prgm = parseProgram(tokens);
+    std::string generated_code = generate(prgm);
+
+    std::string out_file;
+    std::cout << "Enter asm filename: ";
+    std::cin >> out_file;
+    std::ofstream out;
+    out.open(out_file);
+    out << generated_code;
+    out.close();
+    
 }
 
 const std::string Token::type_map[] = {"open_brace","close_brace","open_paren",
