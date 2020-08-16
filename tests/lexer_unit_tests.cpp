@@ -134,7 +134,7 @@ void test_parser_simple() {
     
     std::cout << "Parsing the following program:"  << std::endl;
     std::cout << ".............................\n";
-    std::cout << "int main() {\n\treturn 2;\n}" << std::endl;
+    std::cout << "int main() {\n\treturn -2;\n}" << std::endl;
     
     std::vector<Token> simple_program;
     simple_program.push_back(Token("int"));
@@ -143,19 +143,23 @@ void test_parser_simple() {
     simple_program.push_back(Token(")"));
     simple_program.push_back(Token("{"));
     simple_program.push_back(Token("return"));
+    simple_program.push_back(Token("-"));
     simple_program.push_back(Token("2"));
     simple_program.push_back(Token(";"));
     simple_program.push_back(Token("}"));
 
     // should not throw any exceptions
     try {
-        parseProgram(simple_program);
+        parse_program(simple_program);
     } 
-    catch (std::exception e) {
+    catch (std::invalid_argument e) {
         std::cout << "Failed parsing: " << e.what() << std::endl;
     }
 
-    std::cout << "\t" << std::endl;
+    std::cout << "Parsed successfully!" << std::endl;
+
+    ////////////////////////////////////////////////////
+    // stage 2
 
 }
 
@@ -175,7 +179,7 @@ void test_codegen_simple() {
     // should not throw any exceptions
     ProgramNode prgm;
     try {
-        prgm = parseProgram(simple_program);
+        prgm = parse_program(simple_program);
     } 
     catch (std::exception e) {
         std::cout << "Failed parsing: " << e.what() << std::endl;
@@ -197,22 +201,22 @@ int main() {
     std::cout << "\n------------------------------------\n";
     std::cout << "(Lexer Singleton Tests):\n" ;
     test_lex_singletons();
-    std::cout << "Passed!" << std::endl;
-    std::cout << "------------------------------------\n";
+    std::cout << "\n(Passed!)" << std::endl;
+
+
 
     std::cout << "\n------------------------------------\n";
     std::cout << "(Parser Simple Tests):\n" ;
     test_parser_simple();
-    std::cout << "Passed!" << std::endl;
-    std::cout << "------------------------------------\n";
+    std::cout << "\n(Passed!)" << std::endl;
 
 
 
     std::cout << "\n------------------------------------\n";
     std::cout << "(Codegenerator Simple Tests):\n" ;
     test_codegen_simple();
-    std::cout << "Passed!" << std::endl;
-    std::cout << "------------------------------------\n";
+    std::cout << "(Passed!)" << std::endl;
+    std::cout << "\n------------------------------------\n";
 
 
 

@@ -6,6 +6,9 @@
 #include <iostream>
 #include <optional>
 
+void compile();
+// int main();
+
 enum TokenType {
     open_brace,
     close_brace,
@@ -15,7 +18,10 @@ enum TokenType {
     type_keyword,
     return_keyword,
     integer_literal,
-    identifier
+    identifier,
+    negation_op,
+    bitwise_complement_op,
+    logical_negation_op
 };
 
 class Token
@@ -51,6 +57,21 @@ bool is_return_keyword_from_rawdata(std::string);
 bool is_integer_literal_from_rawdata(std::string);
 bool is_identifier_from_rawdata(std::string);
 bool is_token_from_rawdata(std::string);
+bool is_negation_op_from_rawdata(std::string);
+bool is_bitwise_complement_op_from_rawdata(std::string);
+bool is_logical_negation_op_from_rawdata(std::string);
+
+// class ASTNode;
+// class FunctionNode;
+// class ExprNode;
+// class StatementNode;
+// class ProgramNode;
+// class UnaryOpNode;
+
+
+/*
+    AST types
+*/
 
 class ASTNode
 {
@@ -62,36 +83,100 @@ public:
     }
 };
 
-class ExprNode : public ASTNode
+enum OperatorType 
+{
+    negation,
+    bitwise_complement,
+    logical_negation
+};
+class UnaryOpNode : public ASTNode 
 {
 private:
-    std::string value;
+    OperatorType op_type;
+    std::string data;
 public:
-    ExprNode() = default;
-    ExprNode(std::string s) {
-        this->value = s;
+    UnaryOpNode() = default;
+    UnaryOpNode(std::string data) {
+        this->data = data;
+        if (data.compare("!") == 0) {
+            this->op_type = OperatorType::logical_negation;
+        }
+        else if (data.compare("~") == 0) {
+            this->op_type = OperatorType::bitwise_complement;
+        }
+        else if (data.compare("-") == 0) {
+            this->op_type = OperatorType::negation;
+        }
+        else {
+            throw new std::invalid_argument("expected unary op but got " +  data);
+        }
     }
-    std::string get_value() {
-        return this->value;
+    OperatorType get_operator_type() {
+        return this->op_type;
+    }
+    std::string get_data() {
+        return this->data;
     }
 };
 
+
+enum ExprType 
+{
+    constant,
+    unary_op
+};
+
+class ExprNode : public ASTNode
+{
+// <exp> ::= <unary_op> <exp> | <int>
+private:
+    std::string data;
+    ExprType type;
+    UnaryOpNode unop;
+    ExprNode *child; // since recursive types are not allowed in c++
+public:
+    ExprNode() = default;
+    ExprNode(std::string s, ExprType t, UnaryOpNode unop = UnaryOpNode(), ExprNode* child = NULL) {
+        this->type = t;
+        this->data = s;
+        this->unop = unop;
+        this->child = child;
+    }
+    ExprNode(const ExprNode &e) { // copy constructor
+        this->type = e.type;
+        this->data = e.data;
+        this->unop = e.unop;
+        // if (e.child != NULL) {
+        //     this->child = e.child;
+        //     std::cout << "agnr\n";
+
+        // }
+
+    }
+    std::string get_data() {
+        return this->data;
+    }
+    ExprType get_type() {
+        return this->type;
+    }
+};
+
+enum StatementType {
+    return_stmt,
+    nil
+};
 class StatementNode : public ASTNode
 {
 private:
-    enum StatementType {
-        return_stmt,
-        nil
-    };
     StatementType type;
     ExprNode expr;
 public:
     StatementNode() = default;
-    StatementNode(ExprNode e, bool is_return_statement=false) {
-        if (is_return_statement) {
-            this->type = return_stmt;
+    StatementNode(ExprNode e, StatementType type) {
+        if (type == StatementType::return_stmt) {
+            this->type = StatementType::return_stmt;
             this->expr = e;
-            children.push_back(e);
+            // children.push_back(e);
         }
     }
     std::string get_statement_type() {
@@ -119,7 +204,7 @@ public:
     FunctionNode(std::string id, StatementNode b) {
         this->identifier = id;
         this->body = b;
-        children.push_back(b);
+        // children.push_back(b);
     }
     std::string get_identifier() {
         return this->identifier;
@@ -137,7 +222,7 @@ public:
     ProgramNode() = default;
     ProgramNode(FunctionNode f) {
         this->function_child = f;
-        children.push_back(f);
+        // children.push_back(f);
     }
     FunctionNode get_function_node() {
         return this->function_child;

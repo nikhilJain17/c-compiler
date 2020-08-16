@@ -17,7 +17,7 @@ void compile()
     std::cin >> source_file;
 
     std::vector<Token> tokens = lex_file(source_file);
-    ProgramNode prgm = parseProgram(tokens);
+    ProgramNode prgm = parse_program(tokens);
     std::string generated_code = generate(prgm);
 
     std::string out_file;
