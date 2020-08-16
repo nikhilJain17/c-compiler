@@ -133,19 +133,20 @@ private:
     std::string data;
     ExprType type;
     UnaryOpNode unop;
-    ExprNode *child; // since recursive types are not allowed in c++
+    ExprNode *unop_expr; // since recursive types are not allowed in c++
 public:
     ExprNode() = default;
-    ExprNode(std::string s, ExprType t, UnaryOpNode unop = UnaryOpNode(), ExprNode* child = NULL) {
+    ExprNode(std::string s, ExprType t, UnaryOpNode unop = UnaryOpNode(), ExprNode* unop_expr = NULL) {
         this->type = t;
         this->data = s;
         this->unop = unop;
-        this->child = child;
+        this->unop_expr = unop_expr;
     }
     ExprNode(const ExprNode &e) { // copy constructor
         this->type = e.type;
         this->data = e.data;
         this->unop = e.unop;
+        this->unop_expr = e.unop_expr;
         // if (e.child != NULL) {
         //     this->child = e.child;
         //     std::cout << "agnr\n";
@@ -158,6 +159,12 @@ public:
     }
     ExprType get_type() {
         return this->type;
+    }
+    UnaryOpNode get_unop() {
+        return this->unop;
+    }
+    ExprNode* get_unop_expr() {
+        return this->unop_expr;
     }
 };
 

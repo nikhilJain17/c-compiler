@@ -3,17 +3,21 @@
 ---------------
 [x] lex basic tokens 
 [x] parse basic tokens
-[x] generate basic program
-[x] end to end compiler flow
+[x] codegen basic program
+[x] tests for all this stuff
 
 ---------------
 >   stage 2
 ---------------
 [x] lex unary operators
-[ ] parse unary operators (parse_expr)
-[ ] generate unary operators
+[x] ^ tests
+[x] parse unary operators (parse_expr)
+[x] ^ tests
+[x] codegen unary operators
+[.] ^ tests
 
 ---------------
 >   misc
 ---------------
+[x] end to end compiler flow
 [ ] add lexing support so that tokens dont have to be separated by spaces in the src file

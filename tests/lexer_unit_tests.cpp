@@ -133,7 +133,6 @@ void test_parser_simple() {
     // parses the following program:
     
     std::cout << "Parsing the following program:"  << std::endl;
-    std::cout << ".............................\n";
     std::cout << "int main() {\n\treturn -2;\n}" << std::endl;
     
     std::vector<Token> simple_program;
@@ -156,7 +155,6 @@ void test_parser_simple() {
         std::cout << "Failed parsing: " << e.what() << std::endl;
     }
 
-    std::cout << "Parsed successfully!" << std::endl;
 
     ////////////////////////////////////////////////////
     // stage 2
@@ -186,10 +184,100 @@ void test_codegen_simple() {
     }
 
     std::string generated_asm = generate(prgm);
-    std::cout << "Generated assembly: \n............................\n";
+    std::cout << "Generated assembly: \n"; // ............................\n";
     std::cout << generated_asm << std::endl;
     
 
+}
+
+void test_codegen_unop() {
+    // code gen for int main() {return 2;}
+    std::vector<Token> simple_program;
+    simple_program.push_back(Token("int"));
+    simple_program.push_back(Token("main"));
+    simple_program.push_back(Token("("));
+    simple_program.push_back(Token(")"));
+    simple_program.push_back(Token("{"));
+    simple_program.push_back(Token("return"));
+    simple_program.push_back(Token("-"));
+    simple_program.push_back(Token("10"));
+    simple_program.push_back(Token(";"));
+    simple_program.push_back(Token("}"));
+
+    // should not throw any exceptions
+    ProgramNode prgm;
+    try {
+        prgm = parse_program(simple_program);
+    } 
+    catch (std::exception e) {
+        std::cout << "Failed parsing: " << e.what() << std::endl;
+    }
+
+    std::string generated_asm = generate(prgm);
+    std::cout << "Generated assembly: \n"; // ............................\n";
+    std::cout << generated_asm << std::endl;
+    
+
+}
+
+void test_codegen_unop2() {
+    // code gen for int main() {return 2;}
+    std::vector<Token> simple_program;
+    simple_program.push_back(Token("int"));
+    simple_program.push_back(Token("main"));
+    simple_program.push_back(Token("("));
+    simple_program.push_back(Token(")"));
+    simple_program.push_back(Token("{"));
+    simple_program.push_back(Token("return"));
+    simple_program.push_back(Token("~"));
+    simple_program.push_back(Token("8"));
+    simple_program.push_back(Token(";"));
+    simple_program.push_back(Token("}"));
+
+    // should not throw any exceptions
+    ProgramNode prgm;
+    try {
+        prgm = parse_program(simple_program);
+    } 
+    catch (std::exception e) {
+        std::cout << "Failed parsing: " << e.what() << std::endl;
+    }
+
+    std::string generated_asm = generate(prgm);
+    std::cout << "Generated assembly: \n"; // ............................\n";
+    std::cout << generated_asm << std::endl;
+    
+}
+
+void test_codegen_unop3() {
+    // code gen for int main() {return 2;}
+    std::vector<Token> simple_program;
+    simple_program.push_back(Token("int"));
+    simple_program.push_back(Token("main"));
+    simple_program.push_back(Token("("));
+    simple_program.push_back(Token(")"));
+    simple_program.push_back(Token("{"));
+    simple_program.push_back(Token("return"));
+    simple_program.push_back(Token("-"));
+    simple_program.push_back(Token("-"));
+    simple_program.push_back(Token("-"));
+    simple_program.push_back(Token("8"));
+    simple_program.push_back(Token(";"));
+    simple_program.push_back(Token("}"));
+
+    // should not throw any exceptions
+    ProgramNode prgm;
+    try {
+        prgm = parse_program(simple_program);
+    } 
+    catch (std::exception e) {
+        std::cout << "Failed parsing: " << e.what() << std::endl;
+    }
+
+    std::string generated_asm = generate(prgm);
+    std::cout << "Generated assembly: \n"; // ............................\n";
+    std::cout << generated_asm << std::endl;
+    
 }
 
 int main() {
@@ -198,25 +286,52 @@ int main() {
     std::cout << "====================================" << std::endl << "Lexer Tests\n" 
         << "====================================\n" << std::endl;
 
-    std::cout << "\n------------------------------------\n";
+    std::cout << "\n_______________________________________\n";
     std::cout << "(Lexer Singleton Tests):\n" ;
+    std::cout << ".............................\n";
     test_lex_singletons();
-    std::cout << "\n(Passed!)" << std::endl;
+    std::cout << "[Passed!]" << std::endl;
+    std::cout << "_______________________________________\n";
 
 
-
-    std::cout << "\n------------------------------------\n";
+    std::cout << "\n_______________________________________\n";
     std::cout << "(Parser Simple Tests):\n" ;
+    std::cout << ".............................\n";
     test_parser_simple();
-    std::cout << "\n(Passed!)" << std::endl;
+    std::cout << "[Passed!]" << std::endl;
+    std::cout << "_______________________________________\n";
 
 
-
-    std::cout << "\n------------------------------------\n";
+    std::cout << "\n_______________________________________\n";
     std::cout << "(Codegenerator Simple Tests):\n" ;
+    std::cout << ".............................\n";
     test_codegen_simple();
-    std::cout << "(Passed!)" << std::endl;
-    std::cout << "\n------------------------------------\n";
+    std::cout << "[Passed!]" << std::endl;
+    std::cout << "_______________________________________\n";
+
+
+    std::cout << "\n_______________________________________\n";
+    std::cout << "(Codegenerator Unop Test):\n" ;
+    std::cout << ".............................\n";
+    test_codegen_unop();
+    std::cout << "[Passed!]" << std::endl;
+    std::cout << "_______________________________________\n";
+
+
+    std::cout << "\n_______________________________________\n";
+    std::cout << "(Codegenerator Unop2 Test):\n" ;
+    std::cout << ".............................\n";
+    test_codegen_unop2();
+    std::cout << "[Passed!]" << std::endl;
+    std::cout << "_______________________________________\n";
+
+
+    std::cout << "\n_______________________________________\n";
+    std::cout << "(Codegenerator Unop3 Test1):\n" ;
+    std::cout << ".............................\n";
+    test_codegen_unop3();
+    std::cout << "[Passed!]" << std::endl;
+    std::cout << "_______________________________________\n";
 
 
 
